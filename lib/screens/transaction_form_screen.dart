@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../models/transaction.dart';
-import 'expense_list_screen.dart';
-import 'income_list_screen.dart';
 
 class TransactionFormScreen extends StatefulWidget {
   final bool isIncome;
 
-  const TransactionFormScreen({
-    super.key,
-    required this.isIncome,
-  });
+  const TransactionFormScreen({super.key, required this.isIncome});
 
   @override
   State<TransactionFormScreen> createState() => _TransactionFormScreenState();
@@ -35,17 +31,21 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
       );
 
       TransactionStorage.addTransaction(tx);
-
-      Navigator.pop(context);
+      context.pop(); // Возврат назад на список
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final title =
-    widget.isIncome ? 'Добавить пополнение' : 'Добавить расход';
+    final title = widget.isIncome ? 'Добавить пополнение' : 'Добавить расход';
     return Scaffold(
-      appBar: AppBar(title: Text(title)),
+      appBar: AppBar(
+        title: Text(title),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.pop(),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Form(
@@ -55,8 +55,7 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
               TextFormField(
                 controller: _titleController,
                 decoration: const InputDecoration(labelText: 'Название'),
-                validator: (v) =>
-                v == null || v.isEmpty ? 'Введите название' : null,
+                validator: (v) => v == null || v.isEmpty ? 'Введите название' : null,
               ),
               TextFormField(
                 controller: _sourceController,
@@ -66,20 +65,15 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
                 controller: _amountController,
                 decoration: const InputDecoration(labelText: 'Сумма'),
                 keyboardType: TextInputType.number,
-                validator: (v) =>
-                v == null || v.isEmpty ? 'Введите сумму' : null,
+                validator: (v) => v == null || v.isEmpty ? 'Введите сумму' : null,
               ),
               TextFormField(
                 controller: _imageUrlController,
-                decoration: const InputDecoration(
-                    labelText: 'URL картинки (опционально)'),
+                decoration: const InputDecoration(labelText: 'URL картинки'),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _submit,
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(50),
-                ),
                 child: Text(title),
               ),
             ],

@@ -1,36 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../models/transaction.dart';
-import 'income_list_screen.dart';
-import 'transaction_form_screen.dart';
 
-class ExpenseListScreen extends StatefulWidget {
+class ExpenseListScreen extends StatelessWidget {
   const ExpenseListScreen({super.key});
-
-  @override
-  State<ExpenseListScreen> createState() => _ExpenseListScreenState();
-}
-
-class _ExpenseListScreenState extends State<ExpenseListScreen> {
-  void _openForm() async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const TransactionFormScreen(isIncome: false)),
-    );
-    setState(() {});
-  }
-
-  void _switchToIncomes() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const IncomeListScreen()),
-    );
-  }
-
-  void _deleteTransaction(Transaction tx) {
-    setState(() {
-      TransactionStorage.removeTransaction(tx);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,16 +12,20 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Расходы'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.pop(),
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add_circle_outline),
-            onPressed: _openForm,
+            icon: const Icon(Icons.add),
             tooltip: 'Добавить расход',
+            onPressed: () => context.push('/add-expense'),
           ),
           IconButton(
             icon: const Icon(Icons.swap_horiz),
-            onPressed: _switchToIncomes,
             tooltip: 'Перейти к пополнениям',
+            onPressed: () => context.push('/incomes'),
           ),
         ],
       ),
@@ -56,26 +33,17 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
           ? const Center(child: Text('Пока нет расходов'))
           : ListView.builder(
         itemCount: expenses.length,
-        itemBuilder: (context, index) {
-          final tx = expenses[index];
+        itemBuilder: (context, i) {
+          final tx = expenses[i];
           return Card(
             margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             child: ListTile(
               leading: CircleAvatar(backgroundImage: NetworkImage(tx.imageUrl)),
               title: Text(tx.title),
               subtitle: Text(tx.source),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '-${tx.amount.toStringAsFixed(2)} ₽',
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.delete_outline, color: Colors.grey),
-                    onPressed: () => _deleteTransaction(tx),
-                  ),
-                ],
+              trailing: Text(
+                '-${tx.amount.toStringAsFixed(2)} ₽',
+                style: const TextStyle(color: Colors.red),
               ),
             ),
           );

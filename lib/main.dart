@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'screens/main_screen.dart';
+import 'app_router.dart';
 import 'models/transaction.dart';
 
 void main() {
   TransactionStorage.expenses.addAll(initialExpenses);
   TransactionStorage.incomes.addAll(initialIncomes);
-  TransactionStorage.recalculateBalance(); // вычисляем баланс на старте
+  TransactionStorage.recalculateBalance();
 
   runApp(const ExpenseApp());
 }
@@ -15,12 +15,12 @@ class ExpenseApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Контроль расходов',
+      routerConfig: appRouter,
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: const ExpenseMainScreen(),
     );
   }
 }

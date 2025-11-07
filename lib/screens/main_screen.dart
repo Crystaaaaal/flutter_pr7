@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/transaction.dart';
+import 'package:go_router/go_router.dart';
 import '../widgets/balance_card.dart';
-import 'income_list_screen.dart';
-import 'expense_list_screen.dart';
 
 class ExpenseMainScreen extends StatefulWidget {
   const ExpenseMainScreen({super.key});
@@ -12,33 +10,12 @@ class ExpenseMainScreen extends StatefulWidget {
 }
 
 class _ExpenseMainScreenState extends State<ExpenseMainScreen> {
-
-  Future<void> _openScreen(Widget screen) async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => screen),
-    );
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Контроль расходов'),
         centerTitle: true,
-        actions: [
-          // IconButton(
-          //   icon: const Icon(Icons.add_circle_outline),
-          //   tooltip: 'Перейти к пополнениям',
-          //   onPressed: () => _openScreen(const IncomeListScreen()),
-          // ),
-          // IconButton(
-          //   icon: const Icon(Icons.remove_circle_outline),
-          //   tooltip: 'Перейти к тратам',
-          //   onPressed: () => _openScreen(const ExpenseListScreen()),
-          // ),
-        ],
       ),
       body: Center(
         child: Padding(
@@ -48,7 +25,7 @@ class _ExpenseMainScreenState extends State<ExpenseMainScreen> {
             children: [
               const BalanceCard(),
               ElevatedButton(
-                onPressed: () => _openScreen(const IncomeListScreen()),
+                onPressed: () => context.push('/incomes'),
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size.fromHeight(50),
                 ),
@@ -56,7 +33,7 @@ class _ExpenseMainScreenState extends State<ExpenseMainScreen> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () => _openScreen(const ExpenseListScreen()),
+                onPressed: () => context.push('/expenses'),
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size.fromHeight(50),
                 ),
